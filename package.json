@@ -2,10 +2,10 @@
     "name": "edu-api",
     "version": "1.0.0",
     "description": "EDU core 3 project. Create an Application Programming interface with Node Package Manager.  ",
-    "main": "index.js",
+    "main": "app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon index.js"
+        "start": "nodemon app.js"
     },
     "repository": {
         "type": "git",
