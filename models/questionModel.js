@@ -1,12 +1,23 @@
 //connect through mongoose 
-
-//user schema - Users can create an account and log in.
+const mongoose = require('mongoose');
+//question schema - User can post questions to server & view questions on correc troute.
 
 //declare a new mongoose instance
-//model user accounts
+const user = new mongoose.Schema({
+    question: {
+        type: String,
+        required: true
+    },
+    user: {
+        //associated user
+    }
+});
+
+//model questions (stored in database)
+
 
 //user forms
 //Question
-//Answer
 
 //export
+exports.Schema =
