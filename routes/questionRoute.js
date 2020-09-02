@@ -20,7 +20,9 @@ router.get('/questions', (req, res) => {
     res.send('Questions page')
 })
 
-router.post('/questions/post', (req, res) => {
+router.delete('/', (req, res) => {
+    const myData = new Quest();
+    myData.deleteOne();
     res.send('Posting question to database')
 })
 
