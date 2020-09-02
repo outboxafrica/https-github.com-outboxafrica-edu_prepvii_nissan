@@ -13,5 +13,7 @@ router.get('/questions', (req, res) => {
 })
 
 router.post('/questions/post', () => {
-
+    res.send('Posting question to database')
 })
+
+module.exports = router;
