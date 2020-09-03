@@ -9,7 +9,7 @@ const app = express();
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb+srv://alemin:lubang@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://alemin:'+process.env.MONGO_ATLAS_PWD+'@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
