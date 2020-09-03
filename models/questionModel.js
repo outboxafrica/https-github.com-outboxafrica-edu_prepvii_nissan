@@ -8,10 +8,8 @@ const question = new mongoose.Schema({
     question: {
         type: String,
         required: true
-    },
-    user: {
-        //associated user (maybe identified in form of a userID?)
     }
+
 });
 
 //model questions (stored in database)
