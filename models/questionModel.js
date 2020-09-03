@@ -13,7 +13,7 @@ const questionSchema = new mongoose.Schema({
 });
 
 //model questions (stored in database)
-const Que = mongoose.model('Question', questionSchema);
+const Que = mongoose.model('Questions', questionSchema);
 
 //export module
 module.exports = Que;
