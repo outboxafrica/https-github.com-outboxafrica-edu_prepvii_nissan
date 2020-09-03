@@ -4,19 +4,16 @@ const mongoose = require('mongoose');
 
 
 //declare a new mongoose instance
-const question = new mongoose.Schema({
+const questionSchema = new mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
     question: {
         type: String,
         required: true
     }
-
 });
 
 //model questions (stored in database)
-const Que = mongoose.model('question')
-
-//user forms
-//Question
+const Que = mongoose.model('Question', questionSchema);
 
 //export module
 module.exports = Que;
