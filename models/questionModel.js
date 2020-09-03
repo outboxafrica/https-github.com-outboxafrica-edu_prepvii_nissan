@@ -1,6 +1,7 @@
 //connect through mongoose 
 const mongoose = require('mongoose');
-//question schema - User can post questions to server & view questions on correc troute.
+//question schema - User can post questions to server & view questions on correc route.
+
 
 //declare a new mongoose instance
 const question = new mongoose.Schema({
