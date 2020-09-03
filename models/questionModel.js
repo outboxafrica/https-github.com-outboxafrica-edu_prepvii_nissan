@@ -10,7 +10,7 @@ const questionSchema = new mongoose.Schema({
         required: true
     }, //if a person responds to this question they will be recorded as the "questionAnswerer"
     questionAnswerer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-});
+}); //should this be an array instead? (to accomodate for more answers to questions)
 
 //model questions (stored in database)
 const Que = mongoose.model('Questions', questionSchema);
