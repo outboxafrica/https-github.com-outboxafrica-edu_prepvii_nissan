@@ -11,8 +11,11 @@ const Quest = require('../models/questionModel');
 const User = require('../models/userModel');
 
 //app.METHOD(PATH,HANDLER);
+//step 1. validate user is logged in to be able to post a question
+//step 2. allow user to post data to server. 
+//step 3. capture users id/email & add question to database -(linking question to user)
 
-router.post('/signup', (req, res, next) => {
+router.post('/postquestion', (req, res, next) => {
     User.find({ email: req.body.email })
         .exec()
         .then(user => {
