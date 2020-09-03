@@ -1,11 +1,16 @@
-//connect through mongoose 
+const mongoose=require('mongoose');
 
-//user schema - Users can create an account and log in.
+const userSchema=mongoose.Schema({
+    _id: mongoose.Schema.Types.ObjectId,
+    first_name: {type: String, required: true},
+    last_name: {type: String, required: true},
+    email: {type: String, 
+        required: true, 
+        unique: true,
+        match: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    },
+    password: {type: String, required: true}
 
-//declare a new mongoose instance
-//model user accounts
+});
 
-//email/username
-//password
-
-//export
+module.exports=mongoose.model('User', userSchema);
