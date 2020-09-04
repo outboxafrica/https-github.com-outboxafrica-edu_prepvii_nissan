@@ -4,6 +4,7 @@ const mongoose=require('mongoose')
 const bodyParser=require('body-parser');
 const morgan=require('morgan');
 const userRoute=require('./routes/userRoute')
+const questionRoutes=require('./routes/questionRoutes');
 const app = express();
 
 mongoose.set('useNewUrlParser', true);
@@ -29,6 +30,7 @@ app.use((req, res, next)=>{
 })
 
 app.use('/userRoute', userRoute);
+app.use('/questionRoutes', questionRoutes);
 
 app.use((req, res, next)=>{
     const error= new Error('Not found');
