@@ -15,6 +15,13 @@ const User = require('../models/userModel');
 //step 2. allow user to post data to server. 
 //step 3. capture users id/email & add question to database -(linking question to user)
 
+router.get('/questions', (req, res) => {
+    // Quest.find({});
+    res.json({ "message": "Hello Json" });
+
+})
+
+/*
 router.post('/postquestion', (req, res, next) => {
     User.find({ email: req.body.email })
         .exec()
@@ -56,52 +63,54 @@ router.post('/postquestion', (req, res, next) => {
             }
         })
 })
-router.post('login', (req, res, next) => {
-    User.find({ email: req.body.email })
-        .exec()
-        .then(user => {
-            if (user.length < 1) {
-                return res.status(401).json({
-                    message: 'Auth failed'
-                });
-            }
-            bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-                if (err) {
-                    return res.status[401].json({
-                        message: 'Auth failed'
-                    })
-                }
-                if (result) {
-                    return res.status(200).json({
-                        message: "Auth successful"
-                    })
-                }
-                res.status(401).json({
-                    message: 'Auth failed'
-                })
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
-});
-router.delete('/:userId', (req, res, next) => {
-    User.remove({ _id: req.params.userId })
-        .exec()
-        .then(result => {
-            res.status(200).json({
-                message: "User deleted"
-            })
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        })
-})
+*/
+
+// router.post('login', (req, res, next) => {
+//     User.find({ email: req.body.email })
+//         .exec()
+//         .then(user => {
+//             if (user.length < 1) {
+//                 return res.status(401).json({
+//                     message: 'Auth failed'
+//                 });
+//             }
+//             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+//                 if (err) {
+//                     return res.status[401].json({
+//                         message: 'Auth failed'
+//                     })
+//                 }
+//                 if (result) {
+//                     return res.status(200).json({
+//                         message: "Auth successful"
+//                     })
+//                 }
+//                 res.status(401).json({
+//                     message: 'Auth failed'
+//                 })
+//             })
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.status(500).json({
+//                 error: err
+//             });
+//         });
+// });
+// router.delete('/:userId', (req, res, next) => {
+//     User.remove({ _id: req.params.userId })
+//         .exec()
+//         .then(result => {
+//             res.status(200).json({
+//                 message: "User deleted"
+//             })
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.status(500).json({
+//                 error: err
+//             })
+//         })
+// })
 
 module.exports = router
