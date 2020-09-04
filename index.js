@@ -4,12 +4,18 @@ const mongoose=require('mongoose')
 const bodyParser=require('body-parser');
 const morgan=require('morgan');
 const userRoute=require('./routes/userRoute')
+const questionRoutes=require('./routes/questionRoutes');
+//const key=require('./middleware/keys');
+
 const app = express();
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb+srv://alemin:'+process.env.MONGO_ATLAS_PWD+'@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://alemin:lubang@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
+// mongoose.connect(key.mongodb.dbURI, { useUnifiedTopology: true }, ()=>{
+//     console.log("Connected to mongoDB");
+// });
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -29,6 +35,7 @@ app.use((req, res, next)=>{
 })
 
 app.use('/userRoute', userRoute);
+app.use('/questionRoutes', questionRoutes);
 
 app.use((req, res, next)=>{
     const error= new Error('Not found');
@@ -40,7 +47,7 @@ app.use((error, req, res, next)=>{
     res.status(error.status || 500);
     res.json({
         error: {
-            message: error.message
+            message: error
         }
     });
 });
