@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router();
 const mongoose=require('mongoose');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 
 
 const User=require('../models/userModel');
@@ -12,7 +13,7 @@ router.post('/signup', (req, res, next)=>{
     .then(user=>{
         if(user.length>=1){
             return res.status(409).json({
-                message : "Mail exists"
+                message : "User already exists"
             })
         } else {
             bcrypt.hash(req.body.password, 10, (err, hash)=>{
@@ -32,7 +33,7 @@ router.post('/signup', (req, res, next)=>{
                     .then(result=>{
                         console.log(result);
                         res.status(201).json({
-                            message: 'User created'
+                            message: 'User successfully created'
                         })
                     })
                     .catch(err=>{
@@ -47,28 +48,40 @@ router.post('/signup', (req, res, next)=>{
         }   
     })  
 })
-router.post('login', (req, res, next)=>{
+router.post('/login', (req, res, next)=>{
     User.find({email: req.body.email})
     .exec()
     .then(user=>{
         if(user.length<1){
             return res.status(401).json({
-                message: 'Auth failed'
+                message: 'Password or email does not exist'
             });
         }
         bcrypt.compare(req.body.password, user[0].password, (err, result)=>{
             if(err){
-                return res.status[401].json({
-                    message : 'Auth failed'
+                return res.status(401).json({
+                    message : 'Password or email does not exist'
                 })
             }
             if(result){
+                //adding a web token
+           const token=jwt.sign({email: user[0].email,
+                userId: user[0]._id
+            }, 
+        
+            process.env.JWT_KEY,
+
+            {
+                expiresIn: "1hr"
+            }
+            )
                 return res.status(200).json({
-                    message : "Auth successful"
+                    message : "Login successful",
+                    token : token
                 })
             }
             res.status(401).json({
-                message: 'Auth failed'
+                message: 'Token'
             })
         })
     })
