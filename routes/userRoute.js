@@ -6,6 +6,7 @@ const jwt=require('jsonwebtoken');
 
 
 const User=require('../models/userModel');
+//const key=require('../middleware/keys')
 
 router.post('/signup', (req, res, next)=>{
     User.find({email: req.body.email})
@@ -65,7 +66,8 @@ router.post('/login', (req, res, next)=>{
             }
             if(result){
                 //adding a web token
-           const token=jwt.sign({email: user[0].email,
+           const token=jwt.sign({
+                email: user[0].email,
                 userId: user[0]._id
             }, 
         
