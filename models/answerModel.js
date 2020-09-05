@@ -11,7 +11,10 @@ const answerSchema = new mongoose.Schema({
         required: true
     }, //id of specific question being answered.
     toQuestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Questions' },
-    userAnswering: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    userAnswering: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }); //id of user who is answering the question
 
 //model answers (stored in mongo database)
