@@ -66,6 +66,24 @@ router.get('/:questionId', (req, res, next)=>{
         })
     })
 })
+router.patch('/:questionId', (req, res, next)=>{
+    const id=req.params.questionId;
+    const updateOps={}
+    for(const ops of req.body){
+        updateOps[ops.propName]=ops.value;
+    }
+    Questions.update({_id:id}, {$set : updateOps})
+    .exec()
+    .then(result=>{
+        console.log(result);
+        res.status(200).json(result)
+    })
+    .catch(err=>{
+        console.log(err);
+        res.status(500).json(err)
+    })
+    
+})
 
 router.delete("/:questionId",  checkAuth,(req, res, next)=>{
     Questions.remove({_id : req.params.questionId})
@@ -91,3 +109,4 @@ router.delete("/:questionId",  checkAuth,(req, res, next)=>{
 })
 
 module.exports=router;
+
