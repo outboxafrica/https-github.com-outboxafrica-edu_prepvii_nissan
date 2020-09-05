@@ -16,7 +16,7 @@ const answerSchema = new mongoose.Schema({
 }); //id of user who is answering the question
 
 //model answers (stored in mongo database)
-const Ans = mongoose.model('Questions', questionSchema);
+const Ans = mongoose.model('Answers', answerSchema);
 
 //export module to be used in other files in the project
 module.exports = Ans;
