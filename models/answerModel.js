@@ -8,8 +8,7 @@ const answerSchema = new mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId, //generates unique answer id
     answer: {
         type: String,
-        required: true,
-        default: "Answer not recorded"
+        required: true
     }, //id of specific question being answered.
     toQuestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Questions' },
     userAnswering: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
