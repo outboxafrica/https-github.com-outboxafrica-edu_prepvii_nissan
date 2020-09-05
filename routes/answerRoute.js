@@ -17,20 +17,20 @@ router.get('/', async(req, res, next) => {
     }
 });
 
-// {"answer":"","toQuestion":"","userAnswering":""}
+// {"answer":"","questions":"","user":""}
 router.post('/addAnswer', (req, res, next) => {
     const answer = new Answers({
         _id: mongoose.Types.ObjectId(),
         answer: req.body.answer,
-        questions: req.body.toQuestion,
-        user: req.body.userAnswering
+        questions: req.body.questions,
+        user: req.body.user
     })
 
     answer
         .save()
         .then(result => {
             console.log(result);
-            res.status(201).json(result);
+            res.status(201).json(answer.toJSON);
 
         })
         .catch(err => {
@@ -40,12 +40,12 @@ router.post('/addAnswer', (req, res, next) => {
             })
         })
 
-    res.status(201).json({
-        message: 'Answer was posted!',
-        answer: answer
-            // .question, //includes the message
-            // user: question.user
-    });
+    // res.status(201).json({
+    //     message: 'Answer was posted!',
+    //     answer: answer
+    //         // .question, //includes the message
+    //         // user: question.user
+    // });
 
 })
 
@@ -54,13 +54,14 @@ router.get('/:answerId', (req, res, next) => {
     Answers.findById(req.params.answerId)
         .exec()
         .then(answer => {
-            // in the event that the answer has been deleted, answer=null. 
-            if (Answers.answer == null) {
-                //user must be warned of deleted answer
-                res.status(204).json({
-                    message: 'Answer was deleted/doesn\'t exist' //backslash is an escape character
-                });
-            }
+            // // in the event that the answer has been deleted, answer=null. 
+            // if (Answers.answer == null) {
+            //     //user must be warned of deleted answer
+            //     res.status(204).json({
+            //         message: 'Answer was deleted/doesn\'t exist' //backslash is an escape character
+            //     });
+            //     next();
+            // }
 
             res.status(200).json({
                 answer: answer,
