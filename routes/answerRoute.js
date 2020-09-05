@@ -78,10 +78,27 @@ router.get('/:answerId', (req, res, next) => {
         })
 })
 
-//Delete
-// router.delete('/deleteAnswer', (req, res, next) => {
+//deletes answer by answer id (needs to be done after user has logged in)
+router.delete("/delete/:answerId", (req, res, next) => {
+    Answers.remove({ _id: req.params.answerId })
+        .exec()
+        .then(
+            res.status(200).json({
+                message: "Answer deleted sucessfully",
+                request: {
+                    type: "DELETE",
+                    url: "http://localhost:4000/listanswers",
+                    body: { userId: "ID", question: "String" }
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                })
+            })
 
-// })
-
+        )
+});
 
 module.exports = router; //exporting answer routes to index.js file
