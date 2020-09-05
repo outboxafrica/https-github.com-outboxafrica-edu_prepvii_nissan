@@ -2,23 +2,36 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Answers = require('../models/answerModel');
+const { route } = require('./userRoute');
+
+// //testing database with answers
+// popu.save() //saving before checking again
+
 
 //lists all the answers /listanswers
-router.get('/', (req, res, next) => {
-    // try {
-    //     Answers
-    // } catch (error) {
-    //     res.send('Error occured, could not list answers '- error)
-    // }
+router.get('/', async(req, res, next) => {
+    try {
+        Answers.find().exec().then(answer => { res.json(answer) })
+    } catch (error) {
+        res.status(500).json({ error: err })
+    }
+});
 
-    //testing database with answers
-    let popu = new Answers({ _id: mongoose.Types.ObjectId(), answer: "I think i preferr Php", toQuestion: "5f51325acd36e12f4cd0b693", userAnswering: "5f4fb154ba8d861e7023ead3" })
-    popu.save() //saving before checking again
+// {"answer":"","toQuestion":"","userAnswering":""}
+router.post('/addAnswer', (req, res, next) => {
+    const answer = new Answers({
+        _id: mongoose.Types.ObjectId(),
+        answer: req.body.answer,
+        questions: req.body.toQuestion,
+        user: req.body.userAnswering
+    })
 
-    Answers.find()
-        .exec()
-        .then(doc => {
-            res.status(200).json(doc)
+    answer
+        .save()
+        .then(result => {
+            console.log(result);
+            res.status(201).json(result);
+
         })
         .catch(err => {
             console.log(err);
@@ -26,6 +39,49 @@ router.get('/', (req, res, next) => {
                 error: err
             })
         })
-});
+
+    res.status(201).json({
+        message: 'Answer was posted!',
+        answer: answer
+            // .question, //includes the message
+            // user: question.user
+    });
+
+})
+
+//selects specific answer - BY ANSWER ID!
+router.get('/:answerId', (req, res, next) => {
+    Answers.findById(req.params.answerId)
+        .exec()
+        .then(answer => {
+            // in the event that the answer has been deleted, answer=null. 
+            if (Answers.answer == null) {
+                //user must be warned of deleted answer
+                res.status(204).json({
+                    message: 'Answer was deleted/doesn\'t exist' //backslash is an escape character
+                });
+            }
+
+            res.status(200).json({
+                answer: answer,
+                request: {
+                    type: "GET",
+                    url: "http://localhost:4000/listanswers"
+                }
+            })
+
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        })
+})
+
+//Delete
+// router.delete('/deleteAnswer', (req, res, next) => {
+
+// })
+
 
 module.exports = router; //exporting answer routes to index.js file
