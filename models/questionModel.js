@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 
 //declare a new mongoose instance
 const questionSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    _id: mongoose.Schema.Types.ObjectId, //question id
     question: {
         type: String,
         required: true
-    }, //if a person responds to this question they will be recorded as the "questionAnswerer"
-    questionAnswerer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-}); //should this be an array instead? (to accomodate for more answers to questions)
+    }, //the person asking the question. Their id.
+    asker: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+}); //
 
 //model questions (stored in database)
 const Que = mongoose.model('Questions', questionSchema);
