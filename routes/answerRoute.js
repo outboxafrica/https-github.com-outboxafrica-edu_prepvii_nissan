@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Answers = require('../models/answerModel');
+//importing Quesiton schema to retrieve all answers according to a QuestionID
+const Questions = require('../models/questionModel')
 const { route } = require('./userRoute');
 
 
@@ -88,6 +90,28 @@ router.delete("/delete/:answerId", (req, res, next) => {
 //Additional:
 //1. User can view ALL answers to a specific question. Via the quesiton ID.
 //1. GET - ALL Access
+
+router.get('/:questionID', (req, res, next) => {
+    Questions.findById(req.params.questionID)
+        .exec()
+        .then(answer => {
+
+
+            res.status(200).json({
+                answer: answer,
+                request: {
+                    type: "GET",
+                    url: "http://localhost:4000/listanswers"
+                }
+            })
+
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        })
+})
 
 //2. User can view all answers to their question(s). Via the question ID
 //2. GET - ALL Access with user priotity
