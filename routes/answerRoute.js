@@ -4,9 +4,6 @@ const mongoose = require('mongoose');
 const Answers = require('../models/answerModel');
 const { route } = require('./userRoute');
 
-// //testing database with answers
-// popu.save() //saving before checking again
-
 
 //lists all the answers /listanswers
 router.get('/', async(req, res, next) => {
@@ -40,13 +37,6 @@ router.post('/addAnswer', (req, res, next) => {
             })
         })
 
-    // res.status(201).json({
-    //     message: 'Answer was posted!',
-    //     answer: answer
-    //         // .question, //includes the message
-    //         // user: question.user
-    // });
-
 })
 
 //selects specific answer - BY ANSWER ID!
@@ -54,14 +44,7 @@ router.get('/:answerId', (req, res, next) => {
     Answers.findById(req.params.answerId)
         .exec()
         .then(answer => {
-            // // in the event that the answer has been deleted, answer=null. 
-            // if (Answers.answer == null) {
-            //     //user must be warned of deleted answer
-            //     res.status(204).json({
-            //         message: 'Answer was deleted/doesn\'t exist' //backslash is an escape character
-            //     });
-            //     next();
-            // }
+
 
             res.status(200).json({
                 answer: answer,
