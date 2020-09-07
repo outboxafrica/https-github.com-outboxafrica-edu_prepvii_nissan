@@ -91,32 +91,14 @@ router.delete("/delete/:answerId", (req, res, next) => {
 //1. User can view ALL answers to a specific question. Via the quesiton ID.
 //1. GET - ALL Access
 
-router.get('/:questionID', (req, res, next) => {
-    Questions.findById(req.params.questionID)
-        .exec()
-        .then(answer => {
-
-
-            res.status(200).json({
-                answer: answer,
-                request: {
-                    type: "GET",
-                    url: "http://localhost:4000/listanswers"
-                }
-            })
-
-        }).catch(err => {
-            console.log(err);
-            res.status(500).json({
-                error: err
-            })
-        })
-})
-
 //2. User can view all answers to their question(s). Via the question ID
 //2. GET - ALL Access with user priotity
 
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
+
+router.post('/preferred/true', (req, res) => {
+
+})
 
 module.exports = router; //exporting answer routes to index.js file
