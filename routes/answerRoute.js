@@ -5,6 +5,7 @@ const Answers = require('../models/answerModel');
 //importing Quesiton schema to retrieve all answers according to a QuestionID
 const Questions = require('../models/questionModel')
 const { route } = require('./userRoute');
+const { json } = require('body-parser');
 
 
 //lists all the answers /listanswers
@@ -97,7 +98,18 @@ router.delete("/delete/:answerId", (req, res, next) => {
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
 
-router.post('/preferred/true', (req, res) => {
+router.post('/:preferredAnswer/true', (req, res) => {
+
+    Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
+        .exec().then(data => res.status(200).json({
+            message: data,
+            request: {
+                type: "GET",
+                url: "http://localhost:4000/listanswers",
+            }
+        })).catch(err => {
+            res.status(500).json({ error: err })
+        });
 
 })
 
