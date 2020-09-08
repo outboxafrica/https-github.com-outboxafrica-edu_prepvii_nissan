@@ -18,7 +18,11 @@ const answerSchema = new mongoose.Schema({
     preferred: { //true if the User who posted 'toQuestion'(id), marks it as their preferred answer.
         type: Boolean,
         default: false
-    } //Is this answer preferred by the User who posted the question. true or false?
+    }, //number of votes this answer has. 
+    votes: {
+        type: Number,
+        default: 0
+    }
 });
 
 //model answers (stored in mongo database)
