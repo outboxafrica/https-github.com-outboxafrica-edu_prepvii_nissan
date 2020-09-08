@@ -92,14 +92,14 @@ router.delete("/delete/:answerId", (req, res, next) => {
 
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
-
+//Schema - {"answerID":"","preferred":false}
 router.post('/:preferredAnswer/true', (req, res) => {
 
         Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
             .exec().then(data => res.status(200).json({
                 message: data,
                 request: {
-                    type: "GET",
+                    type: "POST",
                     url: "http://localhost:4000/listanswers",
                 }
             })).catch(err => {
@@ -107,14 +107,15 @@ router.post('/:preferredAnswer/true', (req, res) => {
             });
 
     })
-    //User can mark a question as non preferred
+    //{"answerID":"","preferred":false}
+    //User can mark THEIR question as non preferred
 router.post('/:preferredAnswer/false', (req, res) => {
 
     Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 0 })
         .exec().then(data => res.status(200).json({
             message: data,
             request: {
-                type: "GET",
+                type: "POST",
                 url: "http://localhost:4000/listanswers",
             }
         })).catch(err => {
@@ -122,4 +123,11 @@ router.post('/:preferredAnswer/false', (req, res) => {
         });
 
 })
+
+// //ANY User can Upvote an answer
+// router.post('/:answerID/upvote', (req,res)=>{
+
+// });
+
+
 module.exports = router; //exporting answer routes to index.js file
