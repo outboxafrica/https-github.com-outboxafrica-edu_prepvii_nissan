@@ -88,31 +88,26 @@ router.delete("/delete/:answerId", (req, res, next) => {
         )
 });
 
-//Additional:
-//1. User can view ALL answers to a specific question. Via the quesiton ID.
-//1. GET - ALL Access
-
-//2. User can view all answers to their question(s). Via the question ID
-//2. GET - ALL Access with user priotity
+//Last User story:
 
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
 
 router.post('/:preferredAnswer/true', (req, res) => {
 
-    Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
-        .exec().then(data => res.status(200).json({
-            message: data,
-            request: {
-                type: "GET",
-                url: "http://localhost:4000/listanswers",
-            }
-        })).catch(err => {
-            res.status(500).json({ error: err })
-        });
+        Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
+            .exec().then(data => res.status(200).json({
+                message: data,
+                request: {
+                    type: "GET",
+                    url: "http://localhost:4000/listanswers",
+                }
+            })).catch(err => {
+                res.status(500).json({ error: err })
+            });
 
-})
-
+    })
+    //User can mark a question as non preferred
 router.post('/:preferredAnswer/false', (req, res) => {
 
     Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 0 })
