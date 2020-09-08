@@ -11,11 +11,15 @@ const answerSchema = new mongoose.Schema({
         required: true
     }, //id of specific question being answered.
     toQuestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Questions' },
-    userAnswering: {
+    userAnswering: { //id of user who is answering the question
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }
-}); //id of user who is answering the question
+    }, //Only User that posted Question at ID(toQuestion) will have the right to change this value.
+    preferred: { //true if the User who posted 'toQuestion'(id), marks it as their preferred answer.
+        type: Boolean,
+        default: false
+    } //Is this answer preferred by the User who posted the question. true or false?
+});
 
 //model answers (stored in mongo database)
 const Ans = mongoose.model('Answers', answerSchema);
@@ -24,5 +28,5 @@ const Ans = mongoose.model('Answers', answerSchema);
 module.exports = Ans;
 
 //Schema - copy below to postman
-//{"answer":"","toQuestion":"","userAnswering":""}
+//{"answer":"","toQuestion":"","userAnswering":"","preferred":false}
 // answer IS string. question IS id. user answering IS id.
