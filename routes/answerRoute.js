@@ -113,4 +113,18 @@ router.post('/:preferredAnswer/true', (req, res) => {
 
 })
 
+router.post('/:preferredAnswer/false', (req, res) => {
+
+    Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 0 })
+        .exec().then(data => res.status(200).json({
+            message: data,
+            request: {
+                type: "GET",
+                url: "http://localhost:4000/listanswers",
+            }
+        })).catch(err => {
+            res.status(500).json({ error: err })
+        });
+
+})
 module.exports = router; //exporting answer routes to index.js file
