@@ -7,6 +7,8 @@ const { success, error } = require('consola');
 const morgan = require('morgan');
 //const userRoute=require('./routes/userRoute')
 const questionRoutes = require('./routes/questionRoutes');
+const answerRoute = require('./routes/answerRoute');
+
 
 const { DB, PORT } = require('./config');
 const app = exp()
@@ -18,6 +20,7 @@ app.use(passport.initialize());
 
 require('./middleware/passport')(passport);
 app.use('/questionRoutes', questionRoutes);
+app.use('/answerRoute', answerRoute);
 app.use('/auth/users', require('./routes/users'));
 const startApp = async() => {
 
