@@ -6,6 +6,7 @@ const Answers = require('../models/answerModel');
 const Questions = require('../models/questionModel')
 const { route } = require('./userRoute');
 const { json } = require('body-parser');
+const Ans = require('../models/answerModel');
 
 
 //lists all the answers /listanswers
@@ -125,34 +126,20 @@ router.post('/:preferredAnswer/false', (req, res) => {
 })
 
 //ANY User can Upvote an answer
-//using the answer id.
-router.post('/:answerId/upvote', (req, res) => {
-    //find first & then update
-    // let count = 0;
+//using the answer id. Calculated from the token.
+router.get('/upvote', (req, res, next) => {
+    var count = 0;
 
-    //query with mongoose
-    var query = Answers.find({}, 'totalVotes', function(err, totalVotes) {
-        if (err) return next(err);
-        res.send(totalVotes);
+    Answers.findOneById(_id).then(data => count = data).catch()
+
+
+    Answers.update({ _id: answerId }, (err, result) => {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log("Result :", result)
+        }
     });
-    query.exec(function(err, someValue) {
-        if (err) return next(err);
-        res.send(someValue);
-    });
-    //this eliminates the .select() and .exec() methods
-
-    // Answers.findOneAndUpdate({ _id: req.params.answerId }, { totalVotes: count })
-    //     .exec().then(data => res.status(200).json({
-    //         message: data,
-    //         request: {
-    //             type: "POST",
-    //             url: "http://localhost:4000/listanswers",
-    //         }
-    //     })).catch(err => {
-    //         res.status(500).json({ error: err })
-    //     });
-
 });
-
 
 module.exports = router; //exporting answer routes to index.js file
