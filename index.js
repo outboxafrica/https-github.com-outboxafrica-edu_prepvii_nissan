@@ -1,57 +1,42 @@
-//express package
-const express = require('express')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const userRoute = require('./routes/userRoute')
-const questionRoute = require('./routes/questionRoute')
+const cors=require('cors');
+const exp=require('express');
+const bodyParser=require('body-parser');
+const passport=require('passport')
+const {connect}=require('mongoose');
+const {success, error}=require('consola');
+const morgan=require('morgan');
+//const userRoute=require('./routes/userRoute')
+const questionRoutes=require('./routes/questionRoutes');
 
-const app = express();
+const {DB, PORT} =require('./config');
+const app=exp()
 
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb+srv://alemin:' + process.env.MONGO_ATLAS_PWD + '@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
-
-app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 app.use(bodyParser.json());
+app.use(morgan('dev'));
+app.use(passport.initialize());
 
-
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header("Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-    );
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-        return res.status(200).json({});
-    }
-    next();
+require('./middleware/passport')(passport);
+app.use('/questionRoutes', questionRoutes);
+app.use('/auth/users', require('./routes/users'));
+const startApp= async()=>{
+    
+//connect.Promise=global.Promise;
+await connect(DB, {
+    useFindAndModify: true,
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+}).then(()=> success({
+    message: `Successfully connected to the database \n${DB}`, 
+    badge:true
 })
+).catch(err=> error({
+    message: `Failed to connected to the database \n${err}`, 
+    badge:true
+}));
 
-app.use('/userRoute', userRoute);
-app.use('/listquestions', questionRoute)
+app.listen(PORT, ()=> success({message:`Server is running on port ${PORT}`, badge:true}))
 
-app.use((req, res, next) => {
-    const error = new Error('Not found');
-    error.status = 404;
-    next(error);
-});
-
-app.use((error, req, res, next) => {
-    res.status(error.status || 500);
-    res.json({
-        error: {
-            message: error.message
-        }
-    });
-});
-
-
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-    console.log(`Server listening on port http://localhost:${PORT}`);
-
-});
+}
+startApp();
