@@ -7,10 +7,17 @@ const {success, error}=require('consola');
 const morgan=require('morgan');
 //const userRoute=require('./routes/userRoute')
 const questionRoutes=require('./routes/questionRoutes');
+//const key=require('./middleware/keys');
+
+const app = express();
 
 const {DB, PORT} =require('./config');
 const app=exp()
 
+mongoose.connect('mongodb+srv://alemin:lubang@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
+// mongoose.connect(key.mongodb.dbURI, { useUnifiedTopology: true }, ()=>{
+//     console.log("Connected to mongoDB");
+// });
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -36,7 +43,23 @@ await connect(DB, {
     badge:true
 }));
 
-app.listen(PORT, ()=> success({message:`Server is running on port ${PORT}`, badge:true}))
+app.use((req, res, next)=>{
+    const error= new Error('Not found');
+    error.status=404;
+    next(error);
+});
+
+app.use((error, req, res, next)=>{
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error
+        }
+    });
+});
+
+
+const PORT=process.env.PORT || 4000;
 
 }
 startApp();

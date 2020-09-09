@@ -3,9 +3,11 @@ const router=express.Router();
 const mongoose=require('mongoose');
 
 const Questions=require('../models/questions'); 
+const checkAuth=require('../middleware/routesAuth')
 
 
-router.get('/', (req, res, next)=>{
+
+router.get('/',  (req, res, next)=>{
     Questions.find()
             .exec()
             .then(doc=>{
@@ -19,7 +21,7 @@ router.get('/', (req, res, next)=>{
             })
 });
 
-router.post('/', (req, res, next)=>{
+router.post('/', checkAuth, (req, res, next)=>{
     const question= new Questions({
         _id: mongoose.Types.ObjectId(),
         question: req.body.question,
@@ -65,7 +67,7 @@ router.get('/:questionId', (req, res, next)=>{
     })
 })
 
-router.delete("/:questionId", (req, res, next)=>{
+router.delete("/:questionId",  checkAuth,(req, res, next)=>{
     Questions.remove({_id : req.params.questionId})
     .exec()
     .then(result=>{
