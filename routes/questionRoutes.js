@@ -3,11 +3,13 @@ const router=express.Router();
 const mongoose=require('mongoose');
 
 const Questions=require('../models/questions'); 
-const checkAuth=require('../middleware/routesAuth')
+const {userRegister, userLogin, userAuth, serlializeUser, checkRole}=require('../utils/config');
+
+//const checkAuth=require('../middleware/passport')
 
 
 
-router.get('/',  (req, res, next)=>{
+router.get('/', (req, res, next)=>{
     Questions.find()
             .exec()
             .then(doc=>{
@@ -21,7 +23,7 @@ router.get('/',  (req, res, next)=>{
             })
 });
 
-router.post('/', checkAuth, (req, res, next)=>{
+router.post('/',  userAuth, checkRole('admin', 'user'), (req, res, next)=>{
     const question= new Questions({
         _id: mongoose.Types.ObjectId(),
         question: req.body.question,
@@ -48,7 +50,7 @@ router.post('/', checkAuth, (req, res, next)=>{
 
 });
 
-router.get('/:questionId', (req, res, next)=>{
+router.get('/:questionId',  (req, res, next)=>{
     Questions.findById(req.params.questionId)
     .exec()
     .then(question=>{
@@ -56,7 +58,7 @@ router.get('/:questionId', (req, res, next)=>{
             question:question,
             request: {
                 type: "GET",
-                url: "http://localhost:4000/questionRoutes"
+                url: "http://localhost:3000/questionRoutes"
             }
         })
     }).catch(err=>{
@@ -66,7 +68,7 @@ router.get('/:questionId', (req, res, next)=>{
         })
     })
 })
-router.patch('/:questionId', (req, res, next)=>{
+router.patch('/:questionId', userAuth, checkRole('admin', 'user'), (req, res, next)=>{
     const id=req.params.questionId;
     const updateOps={}
     for(const ops of req.body){
@@ -87,7 +89,7 @@ router.patch('/:questionId', (req, res, next)=>{
     
 })
 
-router.delete("/:questionId",  checkAuth,(req, res, next)=>{
+router.delete("/:questionId", userAuth, checkRole('admin'), (req, res, next)=>{
     Questions.remove({_id : req.params.questionId})
     .exec()
     .then(result=>{
@@ -95,7 +97,7 @@ router.delete("/:questionId",  checkAuth,(req, res, next)=>{
             message: "Questions deleted sucessfully",
             request: {
                 type: "POST",
-                url: "http://localhost:4000/questionRoutes",
+                url: "http://localhost:3000/questionRoutes",
                 body: {userId: "ID", question: "String"}
             }
         })
