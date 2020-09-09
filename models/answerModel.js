@@ -19,7 +19,7 @@ const answerSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }, //number of votes this answer has. 
-    votes: {
+    totalVotes: {
         type: Number,
         default: 0
     }
