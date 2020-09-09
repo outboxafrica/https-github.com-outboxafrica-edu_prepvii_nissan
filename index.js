@@ -11,18 +11,6 @@ const questionRoutes=require('./routes/questionRoutes');
 const {DB, PORT} =require('./config');
 const app=exp()
 
-<<<<<<< HEAD
-const {DB, PORT} =require('./config');
-const app=exp()
-
-mongoose.connect('mongodb+srv://alemin:lubang@cluster0.iwsvs.mongodb.net/StoryTeller?retryWrites=true&w=majority')
-// mongoose.connect(key.mongodb.dbURI, { useUnifiedTopology: true }, ()=>{
-//     console.log("Connected to mongoDB");
-// });
-
-=======
-
->>>>>>> 03a41a5... complete question module
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('dev'));
