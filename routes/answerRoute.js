@@ -3,14 +3,16 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Answers = require('../models/answerModel');
 //importing Quesiton schema to retrieve all answers according to a QuestionID
-const Questions = require('../models/questionModel')
-const { route } = require('./userRoute');
+const { route } = require('./users');
 const { json } = require('body-parser');
 const Ans = require('../models/answerModel');
+//authentication
+const { userAuth, checkRole } = require('../utils/config');
+const { count } = require('../models/answerModel');
 
 
-//lists all the answers /listanswers
-router.get('/', async(req, res, next) => {
+//lists all the answers /answerRoute
+router.get('/', userAuth, async(req, res, next) => {
     try {
         Answers.find().exec().then(answer => { res.json(answer) })
     } catch (error) {
@@ -19,7 +21,7 @@ router.get('/', async(req, res, next) => {
 });
 
 // {"answer":"","questions":"","user":""}
-router.post('/addAnswer', (req, res, next) => {
+router.post('/addAnswer', userAuth, checkRole("user"), (req, res, next) => {
     const answer = new Answers({
         _id: mongoose.Types.ObjectId(),
         answer: req.body.answer,
@@ -31,7 +33,9 @@ router.post('/addAnswer', (req, res, next) => {
         .save()
         .then(result => {
             console.log(result);
-            res.status(201).json(answer.toJSON);
+            res.status(201).json(
+                result
+            );
 
         })
         .catch(err => {
@@ -44,7 +48,7 @@ router.post('/addAnswer', (req, res, next) => {
 })
 
 //selects specific answer - BY ANSWER ID!
-router.get('/:answerId', (req, res, next) => {
+router.get('/:answerId', userAuth, (req, res, next) => {
     Answers.findById(req.params.answerId)
         .exec()
         .then(answer => {
@@ -67,7 +71,7 @@ router.get('/:answerId', (req, res, next) => {
 })
 
 //deletes answer by answer id (needs to be done after user has logged in)
-router.delete("/delete/:answerId", (req, res, next) => {
+router.delete("/delete/:answerId", userAuth, checkRole("admin"), (req, res, next) => {
     Answers.remove({ _id: req.params.answerId })
         .exec()
         .then(
@@ -94,7 +98,7 @@ router.delete("/delete/:answerId", (req, res, next) => {
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
 //Schema - {"answerID":"","preferred":false}
-router.post('/:preferredAnswer/true', (req, res) => {
+router.post('/:preferredAnswer/true', userAuth, checkRole("user"), (req, res) => {
 
         Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
             .exec().then(data => res.status(200).json({
@@ -110,7 +114,8 @@ router.post('/:preferredAnswer/true', (req, res) => {
     })
     //{"answerID":"","preferred":false}
     //User can mark THEIR question as non preferred
-router.post('/:preferredAnswer/false', (req, res) => {
+
+router.post('/:preferredAnswer/false', userAuth, checkRole("user"), (req, res) => {
 
     Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 0 })
         .exec().then(data => res.status(200).json({
@@ -130,8 +135,21 @@ router.post('/:preferredAnswer/false', (req, res) => {
 router.get('/upvote', (req, res, next) => {
     var count = 0;
 
-    Answers.findOneById(_id).then(data => count = data).catch()
+    Answers.findOne({ _id: req.param })
+        .then(data => count = data)
+        .catch(err => {
+            res.status(500).json({ error: err })
+        })
 
+
+    next();
+});
+
+//GET the total votes from database
+//next();
+//then POST to update
+
+router.post('/upvote', (count) => {
 
     Answers.update({ _id: answerId }, (err, result) => {
         if (err) {
@@ -140,6 +158,7 @@ router.get('/upvote', (req, res, next) => {
             console.log("Result :", result)
         }
     });
+
 });
 
 module.exports = router; //exporting answer routes to index.js file
