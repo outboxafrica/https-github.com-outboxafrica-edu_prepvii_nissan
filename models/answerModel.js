@@ -10,10 +10,11 @@ const answerSchema = new mongoose.Schema({
         type: String,
         required: true
     }, //id of specific question being answered.
-    toQuestion: { type: mongoose.Schema.Types.ObjectId, ref: 'Questions' },
-    userAnswering: { //id of user who is answering the question
+    questionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Questions' },
+    userId: { //id of user who is answering the question
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: false
     }, //Only User that posted Question at ID(toQuestion) will have the right to change this value.
     preferred: { //true if the User who posted 'toQuestion'(id), marks it as their preferred answer.
         type: Boolean,
