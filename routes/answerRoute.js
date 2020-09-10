@@ -103,7 +103,7 @@ router.post('/:preferredAnswerId/true', userAuth, checkRole("user"), (req, res) 
 
         Answers.findOneAndUpdate({ _id: req.params.preferredAnswerId }, { preferred: 1 })
             .exec().then(data => res.status(200).json({
-                message: req.body.preferred,
+                message: req.body.preferred, //shall return the updataed response
                 request: {
                     type: "POST",
                     url: "http://localhost:4000/listanswers",
@@ -134,7 +134,7 @@ router.post('/:answerId/false', userAuth, checkRole('user'), (req, res) => {
 //ANY User can Upvote an answer
 //using the answer id. Calculated from the token.
 router.get('/:answerId/upvote', userAuth, (req, res, next) => {
-    const count = 0;
+    const count;
     Answers.findOne({ _id: req.params.answerId }, function(err, result) {
         if (err) {
             return res.status(200).json(err);
