@@ -103,7 +103,7 @@ router.post('/:preferredAnswerId/true', userAuth, checkRole("user"), (req, res) 
 
         Answers.findOneAndUpdate({ _id: req.params.preferredAnswerId }, { preferred: 1 })
             .exec().then(data => res.status(200).json({
-                message: data,
+                message: req.body.preferred,
                 request: {
                     type: "POST",
                     url: "http://localhost:4000/listanswers",
@@ -116,9 +116,9 @@ router.post('/:preferredAnswerId/true', userAuth, checkRole("user"), (req, res) 
     //{"answerID":"","preferred":false}
     //User can mark THEIR question as non preferred
 
-router.post('/:preferredAnswer/false', userAuth, checkRole("user"), (req, res) => {
+router.post('/:answerId/false', userAuth, checkRole('user'), (req, res) => {
 
-    Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 0 })
+    Answers.findOneAndUpdate({ _id: req.params.answerId }, { preferred: 0 })
         .exec().then(data => res.status(200).json({
             message: data,
             request: {
@@ -126,24 +126,32 @@ router.post('/:preferredAnswer/false', userAuth, checkRole("user"), (req, res) =
                 url: "http://localhost:4000/listanswers",
             }
         })).catch(err => {
-            res.status(500).json({ error: err })
+            res.status(500).json(err)
         });
 
 })
 
 //ANY User can Upvote an answer
 //using the answer id. Calculated from the token.
-router.get('/upvote', (req, res, next) => {
-    var count = 0;
-
-    Answers.findOne({ _id: req.param })
-        .then(data => count = data)
-        .catch(err => {
-            res.status(500).json({ error: err })
-        })
-
-
+router.get('/:answerId/upvote', userAuth, (req, res, next) => {
+    const count = 0;
+    Answers.findOne({ _id: req.params.answerId }, function(err, result) {
+        if (err) {
+            return res.status(200).json(err);
+            // res.send(`Count ${count}`)
+        } else {
+            // count = result.
+            return res.status(400).json(result);
+        }
+    })
     next();
+    // Answers.findOne({ _id: req.param })
+    //     .then(data => count = data)
+    //     .catch(err => {
+    //         res.status(500).json({ error: err })
+    //     })
+
+
 });
 
 //GET the total votes from database
