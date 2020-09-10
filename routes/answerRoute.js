@@ -12,7 +12,7 @@ const { count } = require('../models/answerModel');
 
 
 //lists all the answers /answerRoute
-router.get('/', userAuth, async(req, res, next) => {
+router.get('/', userAuth, (req, res, next) => {
     try {
         Answers.find().exec().then(answer => { res.json(answer) })
     } catch (error) {
@@ -20,13 +20,13 @@ router.get('/', userAuth, async(req, res, next) => {
     }
 });
 
-// {"answer":"","questions":"","user":""}
+// {"answer":"","questionId":"","userId":""}
 router.post('/addAnswer', userAuth, checkRole("user"), (req, res, next) => {
     const answer = new Answers({
         _id: mongoose.Types.ObjectId(),
         answer: req.body.answer,
-        questions: req.body.questions,
-        user: req.body.user
+        questions: req.body.questionId,
+        user: req.body.userId
     })
 
     answer
@@ -34,14 +34,15 @@ router.post('/addAnswer', userAuth, checkRole("user"), (req, res, next) => {
         .then(result => {
             console.log(result);
             res.status(201).json(
-                result
+                result, { message: "Answer was posted successfully!" }
             );
 
         })
         .catch(err => {
             console.log(err);
             res.status(500).json({
-                error: err
+                error: err,
+                message: "Answer was posted successfully"
             })
         })
 
@@ -98,9 +99,9 @@ router.delete("/delete/:answerId", userAuth, checkRole("admin"), (req, res, next
 //3. User can mark one answer as preferred out of all the responses their question got. 
 //3. POST - Single Access with user priority
 //Schema - {"answerID":"","preferred":false}
-router.post('/:preferredAnswer/true', userAuth, checkRole("user"), (req, res) => {
+router.post('/:preferredAnswerId/true', userAuth, checkRole("user"), (req, res) => {
 
-        Answers.findOneAndUpdate({ _id: req.params.preferredAnswer }, { preferred: 1 })
+        Answers.findOneAndUpdate({ _id: req.params.preferredAnswerId }, { preferred: 1 })
             .exec().then(data => res.status(200).json({
                 message: data,
                 request: {
