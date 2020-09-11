@@ -23,7 +23,7 @@ router.get('/', (req, res, next)=>{
             })
 });
 
-router.post('/',  userAuth, checkRole('admin', 'user'), (req, res, next)=>{
+router.post('/',  userAuth, checkRole('user'), (req, res, next)=>{
     const question= new Questions({
         _id: mongoose.Types.ObjectId(),
         question: req.body.question,
@@ -68,24 +68,32 @@ router.get('/:questionId',  (req, res, next)=>{
         })
     })
 })
-router.patch('/:questionId', userAuth, checkRole('admin', 'user'), (req, res, next)=>{
+router.put('/:questionId', userAuth, (req, res, next)=>{
+    //userAuth, checkRole('admin', 'user'), 
     const id=req.params.questionId;
-    const updateOps={}
-    for(const ops of req.body){
-        updateOps[ops.propName]=ops.value;
-    }
-    Questions.update({_id:id}, {$set : updateOps})
-    .exec()
+    const newQuestion=req.body;
+    Questions.findByIdAndUpdate(id, newQuestion)
     .then(result=>{
-        console.log(result);
         res.status(200).json(result)
+    }).catch(err=>{
+        res.status(500).json(err)
     })
-    .catch(err=>{
-        console.log(err);
-        res.status(500).json({
-            message: "Internal server error"
-        })
-    })
+    // const updateOps={}
+    // for(const ops of req.body){
+    //     updateOps[ops.propName]=ops.value;
+    // }
+    // Questions.update({_id:id}, {$set : updateOps})
+    // .exec()
+    // .then(result=>{
+    //     console.log(result);
+    //     res.status(200).json(result)
+    // })
+    // .catch(err=>{
+    //     console.log(err);
+    //     res.status(500).json({
+    //         message: "Internal server error"
+    //     })
+    // })
     
 })
 
