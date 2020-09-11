@@ -8,7 +8,7 @@ const { json } = require('body-parser');
 const Ans = require('../models/answerModel');
 //authentication
 const { userAuth, checkRole } = require('../utils/config');
-const { count } = require('../models/answerModel');
+//const { count } = require('../models/answerModel');
 
 
 //lists all the answers /answerRoute
@@ -134,7 +134,7 @@ router.post('/:answerId/false', userAuth, checkRole('user'), (req, res) => {
 //ANY User can Upvote an answer
 //using the answer id. Calculated from the token.
 router.get('/:answerId/upvote', userAuth, (req, res, next) => {
-    const count;
+    //const count;
     Answers.findOne({ _id: req.params.answerId }, function(err, result) {
         if (err) {
             return res.status(200).json(err);
