@@ -12,7 +12,7 @@ const { userAuth, checkRole } = require('../utils/config');
 
 
 //lists all the answers /answerRoute
-router.get('/', userAuth, (req, res, next) => {
+router.get('/', (req, res, next) => {
     try {
         Answers.find().exec().then(answer => { res.json(answer) })
     } catch (error) {
@@ -21,7 +21,7 @@ router.get('/', userAuth, (req, res, next) => {
 });
 
 // {"answer":"","questionId":"","userId":""}
-router.post('/addAnswer', userAuth, checkRole("user"), (req, res, next) => {
+router.post('/', userAuth, checkRole("user"), (req, res, next) => {
     const answer = new Answers({
         _id: mongoose.Types.ObjectId(),
         answer: req.body.answer,
