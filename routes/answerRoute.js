@@ -8,7 +8,6 @@ const { json } = require('body-parser');
 const Ans = require('../models/answerModel');
 //authentication
 const { userAuth, checkRole } = require('../utils/config');
-const { count } = require('../models/answerModel');
 
 
 //lists all the answers /answerRoute
@@ -133,41 +132,31 @@ router.post('/:answerId/false', userAuth, checkRole('user'), (req, res) => {
 
 //ANY User can Upvote an answer
 //using the answer id. Calculated from the token.
-router.get('/:answerId/upvote', userAuth, (req, res, next) => {
-    const count;
-    Answers.findOne({ _id: req.params.answerId }, function(err, result) {
-        if (err) {
-            return res.status(200).json(err);
-            // res.send(`Count ${count}`)
-        } else {
-            // count = result.
-            return res.status(400).json(result);
-        }
-    })
-    next();
-    // Answers.findOne({ _id: req.param })
-    //     .then(data => count = data)
-    //     .catch(err => {
-    //         res.status(500).json({ error: err })
-    //     })
-
-
+router.get('/:answerId/upvote', userAuth, (req, res) => {
+    Answers.findOneAndUpdate({ _id: req.params.answerId })
+        .exec()
+        .then(data => data.update({ totalVotes: totalVotes++ }))
+        .then(data => res.status(200).json(data, { message: 'Upvote is successful!' }))
+        .catch(error => { res.status(400).json(error, { message: 'Upvote is successful!' }) })
 });
 
+// router.post(`:answerId/getVote/upvote`, (req, res, count) => {
+//         Answers.findByIdAndUpdate({ _id: req.params. }, {})
+//     })
 //GET the total votes from database
 //next();
 //then POST to update
 
-router.post('/upvote', (count) => {
+// router.post('/upvote', (count) => {
 
-    Answers.update({ _id: answerId }, (err, result) => {
-        if (err) {
-            console.log(err)
-        } else {
-            console.log("Result :", result)
-        }
-    });
+//     Answers.update({ _id: answerId }, (err, result) => {
+//         if (err) {
+//             console.log(err)
+//         } else {
+//             console.log("Result :", result)
+//         }
+//     });
 
-});
+// });
 
 module.exports = router; //exporting answer routes to index.js file
